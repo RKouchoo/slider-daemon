@@ -1,2 +1,2 @@
 # slider-daemon
-slider-daemon
+Slider Daemon
