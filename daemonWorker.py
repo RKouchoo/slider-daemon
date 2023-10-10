@@ -9,21 +9,36 @@ import time
 
 def work(timeWait, sattelite, resLevel):
 
-	os.chdir("\image")
+    os.chdir("./image")
 
-	# main loop, download the image and move + rename for the webserver
-	while(True):
-		# download the image using slider cli
-		subprocess.call("./slider-cli --satellite=" + sattelite + " --sector=full-disk --product=geocolor -i 1 -z " + resLevel + " -f png")
-		
-		# rename the old image with the current timestamp (yes they are offset by 10 mins)
-		now = datetime.datetime.now()
-		if (os.path.isfile("latest.png")):
-			os.rename("latest.png", now + "_previous.png")
-		
-		for file in glob.glob("cira*.png"):
-    		 os.rename(file, "latest.png")
-		
-		# wait 10 mins for the next image to come avaliable
-		time.sleep(timeWait * 10)
+    sliderArgs = [
+        "./slider-cli",
+        "--satellite=" + sattelite,
+        "--sector=full-disk",
+        "--product=geocolor",
+        "-i",
+        "1",
+        "-z",
+        str(resLevel),
+        #"-v", # verbose for debug
+		"-f",
+        "png"
+    ]
+
+    # main loop, download the image and move + rename for the webserver
+    while (True):
+        # download the image using slider cli
+        state = subprocess.call(sliderArgs)
+
+        # rename the old image with the current timestamp (yes they are offset by 10 mins)
+        now = datetime.datetime.now()
+        if (os.path.isfile("latest.png")):
+            os.rename("latest.png", str(now) + "_previous.png")
+
+        for file in glob.glob("cira*.png"):
+            os.rename(file, "latest.png")
+
+        # wait x mins for the next image to come avaliable
+        print("Gathered latest image, daemon sleeping for: " + str(timeWait * 10))
+        time.sleep(timeWait * 10)
 
