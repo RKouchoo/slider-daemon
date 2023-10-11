@@ -18,7 +18,7 @@ def startDaemonSocket(port, byteSize, maxConnections):
     print("Connection from: " + str(address))
 '''
     for c in range(maxConnections):
-
+        print(c)
         localSocket = socket.socket()
         localSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         localSocket.bind((host, port))  # bind host address and port together
@@ -29,6 +29,7 @@ def startDaemonSocket(port, byteSize, maxConnections):
 
         conThread = threading.Thread(target=socketIngestData, args=(conn, target, byteSize))
         conThread.start()
+        pass
 
 
 
@@ -50,3 +51,4 @@ def broadcastAllSockets(sock, add, message):
     for a in add:
            print(f"Doradcasting {a} to {message}")
            sock.send(message.encode())
+           sock.close()

@@ -1,7 +1,7 @@
 {
-    "imgServerPort": "8001",
+    "imgServerPort": "8123",
     "imgServerAdress" : "192.168.1.175",
-    "socketServerPort" : "8123",
+    "socketServerPort" : "8001",
     "saveImageLocal" : "true",
     "os" : "windows"
 }
