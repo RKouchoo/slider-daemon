@@ -1,0 +1,7 @@
+{
+    "timeDelay": "10",
+    "satellite": "himawari",
+    "resolutionLevel": "2",
+    "imgServerPort": "8000",
+    "socketServerPort" : "8001"
+  }
