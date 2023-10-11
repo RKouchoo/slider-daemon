@@ -2,6 +2,15 @@
 
 import os
 import socket
+import json 
+
+config = []
+
+# load the json config
+with open("client.json", "r") as configFile:
+    config = json.load(configFile)
+    configFile.close()
+
 
 def connectToServer(host, port):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

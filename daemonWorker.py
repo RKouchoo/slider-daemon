@@ -5,9 +5,19 @@ import glob
 import subprocess
 import datetime
 import time
+import socket
 
+def connectToSockDaemonServer(host, port):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port))
+    return client
 
-def work(timeWaitMins, sattelite, resLevel):
+def sendImageOkay(sock, isOk):
+    
+
+def work(timeWaitMins, sattelite, resLevel, socketPort):
+
+	conn = connectToSockDaemonServer(socket.gethostname(), socketPort)
 
     os.chdir("./image")
 
