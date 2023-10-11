@@ -1,4 +1,8 @@
 import socket
+import threading
+
+global addresses
+addresses = []
 
 def startDaemonSocket(port, byteSize, maxConnections):
     # get the hostname
@@ -15,12 +19,25 @@ def startDaemonSocket(port, byteSize, maxConnections):
 
     while True:
         conn, address = serverSocket.accept()
+        conThread = threading.Thread(target=socketIngestData, args=(conn, address, byteSize))
+        conThread.start()
 
-        # receive data stream. it won't accept data packet greater than 1024 bytes
-        data = conn.recv(byteSize).decode()
-        if not data:
-            conn.close()
-            # if data is not received break
+
+
+def socketIngestData(con, host, bytes):
+    addresses.append(host)
+    while True:
+        msg = con.recv(bytes).decode("utf-8")
+        if not msg:
+            msg = ""
             break
+        else:
+            print(msg)
+            broadcastAllSockets(con, addresses, msg)
+            pass
 
-    conn.close()  
+
+def broadcastAllSockets(sock, add, message):
+
+    for a in add:
+           sock.send(message.encode())
