@@ -3,5 +3,5 @@
     "satellite": "himawari",
     "resolutionLevel": "2",
     "imgServerPort": "8123",
-    "socketServerPort" : "8001"
+    "hashServerPort" : "8001"
 }

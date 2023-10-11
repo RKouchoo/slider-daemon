@@ -5,24 +5,9 @@ import glob
 import subprocess
 import datetime
 import time
-import socket
 from datetime import timezone, datetime
 
-isOkImage = "ok"
-isNotOkImage = "no"
-
-def connectToSockDaemonServer(host, port):
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    client.connect((host, port))
-    return client
-
-def sendImageOkay(sock, isOk):
-    sock.send(isOk.encode())
-
 def work(timeWaitMins, sattelite, resLevel, socketPort):
-    conn = connectToSockDaemonServer(socket.gethostname(), socketPort)
-
     os.chdir("./image")
 
     sliderArgs = [
@@ -51,10 +36,6 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
 
         for file in glob.glob("cira*.png"):
             os.rename(file, "latest.png")
-
-        sendImageOkay(conn, isOkImage)
-        time.sleep(5) # sleep for 5 sec, incase of network lag
-        sendImageOkay(conn, isNotOkImage)
 
         # wait x mins for the next image to come avaliable
         print(f"Gathered latest image, daemon sleeping for: {timeWaitMins}min")

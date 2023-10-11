@@ -5,7 +5,7 @@ import json
 
 import daemonWorker as daemon
 import sliderServer as server
-import daemonSocketServer as daemonSocket
+#import daemonSocketServer as daemonSocket
 
 socketByteSize = 1024
 socketMaxConns = 4
@@ -18,14 +18,13 @@ with open("daemon.json", "r") as configFile:
     configFile.close()
 
 imgPort = int(config["imgServerPort"])
+hashPort = int(config["hashServerPort"])
 
-# init and kick off services with the config
-socketThread = threading.Thread(target=daemonSocket.startDaemonSocket, args=(int(config["socketServerPort"]), socketByteSize, socketMaxConns))
 serverThread = threading.Thread(target=server.startImgServer, args=(imgPort,))
-
+hashThread = threading.Thread(target=server.startImgServer, args=(hashPort,))
 daemonThread = threading.Thread(target=daemon.work, args=(int(config["timeDelay"]), config["satellite"], int(config["resolutionLevel"]), int(config["socketServerPort"])))
 
-socketThread.start()
 serverThread.start()
+hashThread.start()
 
 daemonThread.start()
