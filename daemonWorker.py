@@ -43,6 +43,10 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
         # download the image using slider cli
         state = subprocess.call(sliderArgs)
 
+        if state == 1:
+            print("SLIDER-cli failed!")
+            continue
+
         # rename the old image with the current timestamp (yes they are offset by 10 mins)
         now = int(datetime.now(tz=timezone.utc).timestamp() * 1000)
         if (os.path.isfile("latest.png")):
