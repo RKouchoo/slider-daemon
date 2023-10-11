@@ -14,9 +14,13 @@ def startDaemonSocket(port, byteSize, maxConnections):
     print("Connection from: " + str(address))
 
     while True:
+        conn, address = serverSocket.accept()
+
         # receive data stream. it won't accept data packet greater than 1024 bytes
         data = conn.recv(byteSize).decode()
         if not data:
+            conn.close()
             # if data is not received break
             break
+
     conn.close()  
