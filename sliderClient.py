@@ -54,19 +54,17 @@ def setLatestAsWallpaper(image):
     if config["os"] == "windows":
         ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, image, wallPos) # invoke the kernel
 
-
-sock = connectToServer(config["imgServerAdress"], int(config["socketServerPort"]))
-
 while True:
+    sock = connectToServer(config["imgServerAdress"], int(config["socketServerPort"]))
+
     # catch a broken link, attempt to reconnect
     if not sock:
         print("Server connection failed, retry in 15s")
         time.sleep(15) # wait 15 sec then try again
-        sock = connectToServer(config["imgServerAdress"], int(config["socketServerPort"]))
         continue
 
     # wait for data
-    data = sock.recieve(socketByteSize)
+    data = sock.recv(socketByteSize)
     if not data:
         continue
 

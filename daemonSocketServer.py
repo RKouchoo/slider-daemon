@@ -40,4 +40,5 @@ def socketIngestData(con, host, bytes):
 def broadcastAllSockets(sock, add, message):
 
     for a in add:
+           print(f"Doradcasting {a} to {message}")
            sock.send(message.encode())
