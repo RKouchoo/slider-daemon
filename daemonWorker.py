@@ -7,7 +7,7 @@ import datetime
 import time
 
 
-def work(timeWait, sattelite, resLevel):
+def work(timeWaitMins, sattelite, resLevel):
 
     os.chdir("./image")
 
@@ -39,6 +39,6 @@ def work(timeWait, sattelite, resLevel):
             os.rename(file, "latest.png")
 
         # wait x mins for the next image to come avaliable
-        print("Gathered latest image, daemon sleeping for: " + str(timeWait * 10))
-        time.sleep(timeWait * 10)
+        print("Gathered latest image, daemon sleeping for: " + str(timeWaitMins))
+        time.sleep(timeWaitMins * 60)
 
