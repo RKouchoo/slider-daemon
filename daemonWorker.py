@@ -13,11 +13,10 @@ def connectToSockDaemonServer(host, port):
     return client
 
 def sendImageOkay(sock, isOk):
-    
+    pass
 
 def work(timeWaitMins, sattelite, resLevel, socketPort):
-
-	conn = connectToSockDaemonServer(socket.gethostname(), socketPort)
+    conn = connectToSockDaemonServer(socket.gethostname(), socketPort)
 
     os.chdir("./image")
 

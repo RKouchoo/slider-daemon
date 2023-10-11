@@ -40,4 +40,4 @@ def startDaemonSocket(port, byteSize, maxConnections):
 
 
 def setReadyAck(ready):
-      
+      pass
