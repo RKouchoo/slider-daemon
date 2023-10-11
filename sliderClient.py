@@ -2,8 +2,8 @@
 
 import os
 import socket
-import json 
-import glob 
+import json
+import glob
 import requests
 import time
 import datetime
@@ -29,29 +29,29 @@ def connectToServer(host, port):
 
     return client
 
-def gatherLatestImage(server, path):
+
+def gatherLatestImage(server, port, path):
     now = datetime.now(tz=timezone.utc).timestamp() * 1000
 
     if config["saveImageLocal"] == "true":
-        for file in glob.glob(f"{path}\image\latest.png"):
+        for file in glob.glob(path):
             os.rename(file, f"{now}.png")
     else:
-        os.remove(f"{path}\image\latest.png")
+        os.remove(f"{path}\latest.png")
 
-    latest = requests.get(server).content
-    with open(f"{path}\image\latest.png", "wb") as handler:
+    latest = requests.get(server + f":{port}").content
+    with open(f"{path}\latest.png", "wb") as handler:
         handler.write(latest)
 
-    setLatestAsWallpaper(f"{path}\image\latest.png")
+    setLatestAsWallpaper(f"{path}\latest.png")
 
 
 def setLatestAsWallpaper(image):
     SPI_SETDESKWALLPAPER = 20 # tell the kernel we want to change wallpaper
-    wallPos = 3 # 
+    wallPos = 3 # what style, 3 is fit
 
     if config["os"] == "windows":
-        ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, image, wallPos)
-    
+        ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, image, wallPos) # invoke the kernel
 
 
 sock = connectToServer(config["imgServerAdress"], int(config["socketServerPort"]))
@@ -59,7 +59,7 @@ sock = connectToServer(config["imgServerAdress"], int(config["socketServerPort"]
 while True:
     # catch a broken link, attempt to reconnect
     if not sock:
-        print("Server connection failed")
+        print("Server connection failed, retry in 15s")
         time.sleep(15) # wait 15 sec then try again
         sock = connectToServer(config["imgServerAdress"], int(config["socketServerPort"]))
         continue
@@ -71,7 +71,7 @@ while True:
 
     print(data.decode("utf8")) # debug
     if data.decode("utf8") == "ok":
-        gatherLatestImage(config["imgServerAdress"], config["imgServerPort"])
+        gatherLatestImage(config["imgServerAdress"], config["imgServerPort"], os.path.abspath("image"))
     else:
         pass
         

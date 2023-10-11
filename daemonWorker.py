@@ -4,15 +4,16 @@ import os
 import glob
 import subprocess
 import datetime
-from datetime import timezone
 import time
 import socket
+from datetime import timezone, datetime
 
 isOkImage = "ok"
 isNotOkImage = "no"
 
 def connectToSockDaemonServer(host, port):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     client.connect((host, port))
     return client
 
@@ -26,14 +27,14 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
 
     sliderArgs = [
         "./slider-cli",
-        "--satellite=" + sattelite,
+        f"--satellite={sattelite}",
         "--sector=full-disk",
         "--product=geocolor",
         "-i",
         "1",
         "-z",
-        str(resLevel),
-        #"-v", # verbose for debug
+        f"{resLevel}",
+        "-v", # verbose for debug
 		"-f",
         "png"
     ]
@@ -42,10 +43,6 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
     while (True):
         # download the image using slider cli
         state = subprocess.call(sliderArgs)
-
-        if state == 1:
-            print("SLIDER-cli failed!")
-            continue
 
         # rename the old image with the current timestamp (yes they are offset by 10 mins)
         now = int(datetime.now(tz=timezone.utc).timestamp() * 1000)
@@ -60,7 +57,7 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
         sendImageOkay(conn, isNotOkImage)
 
         # wait x mins for the next image to come avaliable
-        print("Gathered latest image, daemon sleeping for: " + str(timeWaitMins))
+        print(f"Gathered latest image, daemon sleeping for: {timeWaitMins}min")
 
 
         time.sleep(timeWaitMins * 60)
