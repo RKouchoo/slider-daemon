@@ -21,10 +21,10 @@ imgPort = int(config["imgServerPort"])
 hashPort = int(config["hashServerPort"])
 
 serverThread = threading.Thread(target=server.startImgServer, args=(imgPort,))
-hashThread = threading.Thread(target=server.startHashServer, args=(hashPort,))
+#hashThread = threading.Thread(target=server.startHashServer, args=(hashPort,))
 daemonThread = threading.Thread(target=daemon.work, args=(int(config["timeDelay"]), config["satellite"], int(config["resolutionLevel"]), int(config["hashServerPort"])))
 
 serverThread.start()
-hashThread.start()
+#hashThread.start()
 
 daemonThread.start()
