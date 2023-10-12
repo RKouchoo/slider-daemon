@@ -61,9 +61,9 @@ def setLatestAsWallpaper(image):
 
 def compareHashes(current, latest):
     if current == latest:
-        return True
-    else:
         return False
+    else:
+        return True
 
 
 
@@ -73,7 +73,7 @@ clientMd5Path = f"{os.getcwd()}/image/{md5}"
 while True:
     try:
         currentHash = getCurrentSavedHash(clientMd5Path) # load the current hash into memory
-        latestHash = getHashFromServer(config["imgServerAdress"], config["hashServerPort"], os.path.abspath("image/hash.md5")) # grab the new hash from the server and save to disk
+        latestHash = getHashFromServer(config["imgServerAdress"], config["hashServerPort"], os.path.abspath(config["md5"])) # grab the new hash from the server and save to disk
     except:
         print("Failed to get data from the server, sleeping for interval")
         time.sleep(int(config["checkIntervalMins"]) * 60)
