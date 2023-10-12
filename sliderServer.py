@@ -33,5 +33,5 @@ def startHashServer(port):
         httph.allow_reuse_address = False
         httph.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         httph.RequestHandlerClass.translate_path = lambda self, path: hashPath
-        print(f"Serving hash {hashPath} at port {hashPath}")
+        print(f"Serving hash {hashPath} at port {port}")
         httph.serve_forever()

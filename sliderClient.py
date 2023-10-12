@@ -7,7 +7,7 @@ import glob
 import requests
 import time
 import datetime
-from datetime import timezone
+from datetime import timezone, datetime
 
 import ctypes
 
@@ -24,25 +24,28 @@ with open("client.json", "r") as configFile:
 def gatherLatestImage(server, port, path):
     now = datetime.now(tz=timezone.utc).timestamp() * 1000
 
+    latest = requests.get(server + f":{port}").content
+    with open(f"{path}\latest.png", "wb") as handler:
+        handler.write(latest)
+
     if config["saveImageLocal"] == "true":
         for file in glob.glob(path):
             os.rename(file, f"{now}.png")
     else:
         os.remove(f"{path}\latest.png")
 
-    latest = requests.get(server + f":{port}").content
-    with open(f"{path}\latest.png", "wb") as handler:
-        handler.write(latest)
+
 
     setLatestAsWallpaper(f"{path}\latest.png")
 
 
 def getHashFromServer(server, port, path):
-    latest = requests.get(server + f":{port}").content
-    with open(f"{path}\hash.md5", "wb") as handler:
+    latest = requests.get(f"http://{server}:{port}/hash.md5").content
+
+    with open(path, "wb") as handler:
         handler.write(latest)
 
-    return getCurrentSavedHash(clientMd5Path)
+    return getCurrentSavedHash(path)
 
 
 def getCurrentSavedHash(file):
@@ -60,7 +63,9 @@ def setLatestAsWallpaper(image):
 
 
 def compareHashes(current, latest):
+    print("Checking if server has update")
     if current == latest:
+        print("No update yet, retry in 1 min")
         return False
     else:
         return True
@@ -68,7 +73,12 @@ def compareHashes(current, latest):
 
 
 md5 = config["md5"]
-clientMd5Path = f"{os.getcwd()}/image/{md5}"
+clientMd5Path = f"{os.getcwd()}\\image\\{md5}"
+
+currentHash = getCurrentSavedHash(clientMd5Path) # load the current hash into memory
+latestHash = getHashFromServer(config["imgServerAdress"], config["hashServerPort"], os.path.abspath(config["md5"]))
+
+print(currentHash, latestHash)
 
 while True:
     try:
