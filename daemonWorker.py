@@ -7,6 +7,8 @@ import datetime
 import time
 from datetime import timezone, datetime
 
+import hashManager
+
 def work(timeWaitMins, sattelite, resLevel, socketPort):
     os.chdir("./image")
 
@@ -37,9 +39,10 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
         for file in glob.glob("cira*.png"):
             os.rename(file, "latest.png")
 
+            # update the hash 
+        hashManager.updateCurrentHash(os.getcwd() + "/image/latest.png")
+
         # wait x mins for the next image to come avaliable
         print(f"Gathered latest image, daemon sleeping for: {timeWaitMins}min")
-
-
         time.sleep(timeWaitMins * 60)
 

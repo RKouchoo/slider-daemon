@@ -27,4 +27,11 @@ def writeToHashFile(path, hash):
     with open(path, "w") as newMd5:
         json.dump(config, newMd5)
 
+# test
+
+'''
 updateCurrentHash(os.getcwd() + "/image/latest.png")
+import sliderServer
+
+sliderServer.startHashServer(8124)
+'''
