@@ -17,7 +17,7 @@ class quietServer(http.server.SimpleHTTPRequestHandler):
 
 def startImgServer(port):
 
-    with socketserver.TCPServer(("", int(port)), quietServer) as httpd:
+    with socketserver.TCPServer(("", int(port)), http.server.SimpleHTTPRequestHandler) as httpd:
         # Override the handler's translate_path method to serve a specific file
         httpd.allow_reuse_address = False
         httpd.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -28,7 +28,7 @@ def startImgServer(port):
 
 def startHashServer(port):
 
-    with socketserver.TCPServer(("", int(port)), quietServer) as httph:
+    with socketserver.TCPServer(("", int(port)), http.server.SimpleHTTPRequestHandler) as httph:
         # Override the handler's translate_path method to serve a specific file
         httph.allow_reuse_address = False
         httph.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
