@@ -24,17 +24,19 @@ with open("client.json", "r") as configFile:
 def gatherLatestImage(server, port, path):
     now = datetime.now(tz=timezone.utc).timestamp() * 1000
 
-    latest = requests.get(server + f":{port}").content
-    with open(f"{path}\latest.png", "wb") as handler:
-        handler.write(latest)
+    latest = requests.get(f"http://{server}:{port}/latest.png", stream=True)
+    
+    for block in latest.iter_content(1024):
+        if not block:
+            break
 
     if config["saveImageLocal"] == "true":
-        for file in glob.glob(path):
-            os.rename(file, f"{now}.png")
+        os.rename(f"{path}\latest.png", f"{path}\{now}.png")
     else:
         os.remove(f"{path}\latest.png")
 
-
+    with open(f"{path}\latest.png", "wb") as handler:
+        handler.write(latest.content)
 
     setLatestAsWallpaper(f"{path}\latest.png")
 
