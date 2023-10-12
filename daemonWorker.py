@@ -40,7 +40,7 @@ def work(timeWaitMins, sattelite, resLevel, socketPort):
             os.rename(file, "latest.png")
 
             # update the hash 
-        hashManager.updateCurrentHash(os.getcwd() + "/image/latest.png")
+        hashManager.updateCurrentHash(os.getcwd() + "/latest.png")
 
         # wait x mins for the next image to come avaliable
         print(f"Gathered latest image, daemon sleeping for: {timeWaitMins}min")
