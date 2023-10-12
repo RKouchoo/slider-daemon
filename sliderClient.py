@@ -71,8 +71,13 @@ md5 = config["md5"]
 clientMd5Path = f"{os.getcwd()}/image/{md5}"
 
 while True:
-    currentHash = getCurrentSavedHash(clientMd5Path) # load the current hash into memory
-    latestHash = getHashFromServer(config["imgServerAdress"], config["hashServerPort"], os.path.abspath("image/hash.md5")) # grab the new hash from the server and save to disk
+    try:
+        currentHash = getCurrentSavedHash(clientMd5Path) # load the current hash into memory
+        latestHash = getHashFromServer(config["imgServerAdress"], config["hashServerPort"], os.path.abspath("image/hash.md5")) # grab the new hash from the server and save to disk
+    except:
+        print("Failed to get data from the server, sleeping for interval")
+        time.sleep(int(config["checkIntervalMins"]) * 60)
+        continue
 
     if compareHashes(currentHash, latestHash):
         gatherLatestImage(config["imgServerAdress"], config["imgServerPort"], os.path.abspath("image"))
