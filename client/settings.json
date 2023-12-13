@@ -1,0 +1,7 @@
+{
+    "timeDelay": "10",
+    "satellite": "himawari",
+    "timeWaitMins" : "10",
+    "resolution": "2"
+
+}
